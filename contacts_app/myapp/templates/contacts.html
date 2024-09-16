@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        thead {
+            background-color: #333;
+            color: #fff;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        form {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        form input[type="text"], 
+        form input[type="email"], 
+        form input[type="number"], 
+        form textarea { 
+        width: 100%;
+        box-sizing: border-box; 
+        margin-bottom: 10px; 
+        }
+
+        form input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Contacts</h1>
+    <form method="GET" >
+        {{ search.as_p }}
+        <button type="submit">Search</button>
+    </form>
+    
+    <div class="container">
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>PHONE NUMBER</th>
+                    <th>EMAIL</th>
+                    <th>ADDRESS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for searchedcontact in results %}
+                        <tr>
+                            <td>{{ searchedcontact.name }}</td>
+                            <td>{{ searchedcontact.number }}</td>
+                            <td>{{ searchedcontact.email }}</td>
+                            <td>{{ searchedcontact.address }}</td>
+                            <td>
+                                <a href="{% url 'update_contact' searchedcontact.id %}">Edit</a>
+                                <a href="{% url 'delete_contact' searchedcontact.id %}" onclick="return confirm('Are you sure you want to delete this contact?');">Delete</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        {% for contact in contacts %}
+                            <tr>
+                                <td>{{ contact.name }}</td>
+                                <td>{{ contact.number }}</td>
+                                <td>{{ contact.email }}</td>
+                                <td>{{ contact.address }}</td>
+                                <td>
+                                    <a href="{% url 'update_contact' contact.id %}">Edit</a>
+                                    <a href="{% url 'delete_contact' contact.id %}" onclick="return confirm('Are you sure you want to delete this contact?');">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if back %}
+                        <a href="{% url 'display_contacts' %}" >Back</a>
+                    {% endif %}
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    
+</body>
+</html>
